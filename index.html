@@ -12,6 +12,9 @@
         --text: #1f1f1f;
         --card: #ffffff;
         --border: #dde1e6;
+        --title: 26px;
+        --body: 16px;
+        --caption: 14px;
       }
 
       * {
@@ -23,6 +26,7 @@
         margin: 0;
         background: var(--bg);
         color: var(--text);
+        font-size: var(--body);
       }
 
       header {
@@ -36,12 +40,13 @@
 
       header h1 {
         margin: 0 0 8px 0;
-        font-size: 24px;
+        font-size: var(--title);
       }
 
       header p {
         margin: 0;
         color: #5f6b7a;
+        font-size: var(--caption);
       }
 
       main {
@@ -66,6 +71,7 @@
         border-radius: 999px;
         cursor: pointer;
         white-space: nowrap;
+        font-size: var(--body);
       }
 
       .tab-button.active {
@@ -89,11 +95,12 @@
 
       .card h3 {
         margin-top: 0;
+        font-size: 18px;
       }
 
       label {
         display: block;
-        font-size: 13px;
+        font-size: var(--caption);
         margin-bottom: 4px;
         color: #526070;
       }
@@ -106,6 +113,7 @@
         border-radius: 8px;
         border: 1px solid var(--border);
         margin-bottom: 12px;
+        font-size: var(--body);
       }
 
       button.primary {
@@ -116,12 +124,13 @@
         border-radius: 8px;
         cursor: pointer;
         width: 100%;
+        font-size: var(--body);
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px;
+        font-size: var(--body);
       }
 
       th,
@@ -134,10 +143,26 @@
       .notice {
         margin-top: 8px;
         color: #5f6b7a;
-        font-size: 13px;
+        font-size: var(--caption);
+      }
+
+      .info-banner {
+        background: #fff4cc;
+        border: 1px solid #ffd36a;
+        color: #5f4a00;
+        padding: 10px 12px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        font-size: var(--caption);
       }
 
       @media (max-width: 768px) {
+        :root {
+          --title: 24px;
+          --body: 17px;
+          --caption: 15px;
+        }
+
         header {
           padding: 16px;
         }
@@ -155,12 +180,12 @@
         }
 
         table {
-          font-size: 12px;
+          font-size: var(--body);
         }
 
         th,
         td {
-          padding: 6px;
+          padding: 8px;
         }
       }
     </style>
@@ -177,26 +202,12 @@
         <button class="tab-button" data-tab="ledger">회계관리</button>
       </div>
 
+      <div class="info-banner">
+        이 웹앱은 모바일에서 회원/회비/회계 내역을 확인하는 용도입니다. 등록 및 수정은 Google 스프레드시트에서 진행하세요.
+      </div>
+
       <section id="members" class="tab-panel">
         <div class="grid">
-          <div class="card">
-            <h3>회원 등록</h3>
-            <label for="member-name">이름</label>
-            <input id="member-name" type="text" />
-            <label for="member-phone">전화번호</label>
-            <input id="member-phone" type="text" />
-            <label for="member-join">가입일</label>
-            <input id="member-join" type="date" />
-            <label for="member-status">상태</label>
-            <select id="member-status">
-              <option value="활동">활동</option>
-              <option value="휴면">휴면</option>
-            </select>
-            <label for="member-notes">메모</label>
-            <textarea id="member-notes" rows="3"></textarea>
-            <button class="primary" id="member-submit">등록</button>
-            <p class="notice" id="member-notice"></p>
-          </div>
           <div class="card">
             <h3>회원 목록</h3>
             <table>
@@ -210,32 +221,13 @@
               </thead>
               <tbody id="member-table"></tbody>
             </table>
+            <p class="notice">회원 추가/수정은 시트에서 진행해 주세요.</p>
           </div>
         </div>
       </section>
 
       <section id="payments" class="tab-panel" hidden>
         <div class="grid">
-          <div class="card">
-            <h3>회비 납부 등록</h3>
-            <label for="payment-member">회원명</label>
-            <input id="payment-member" type="text" />
-            <label for="payment-month">회비 월</label>
-            <input id="payment-month" type="month" />
-            <label for="payment-amount">금액</label>
-            <input id="payment-amount" type="number" />
-            <label for="payment-date">납부일</label>
-            <input id="payment-date" type="date" />
-            <label for="payment-method">납부방법</label>
-            <select id="payment-method">
-              <option value="현금">현금</option>
-              <option value="계좌이체">계좌이체</option>
-            </select>
-            <label for="payment-notes">메모</label>
-            <textarea id="payment-notes" rows="3"></textarea>
-            <button class="primary" id="payment-submit">등록</button>
-            <p class="notice" id="payment-notice"></p>
-          </div>
           <div class="card">
             <h3>회비 납부 내역</h3>
             <table>
@@ -249,30 +241,13 @@
               </thead>
               <tbody id="payment-table"></tbody>
             </table>
+            <p class="notice">납부 내역 입력은 시트에서 진행해 주세요.</p>
           </div>
         </div>
       </section>
 
       <section id="ledger" class="tab-panel" hidden>
         <div class="grid">
-          <div class="card">
-            <h3>회계 입력</h3>
-            <label for="ledger-type">구분</label>
-            <select id="ledger-type">
-              <option value="수입">수입</option>
-              <option value="지출">지출</option>
-            </select>
-            <label for="ledger-category">카테고리</label>
-            <input id="ledger-category" type="text" />
-            <label for="ledger-amount">금액</label>
-            <input id="ledger-amount" type="number" />
-            <label for="ledger-date">날짜</label>
-            <input id="ledger-date" type="date" />
-            <label for="ledger-desc">설명</label>
-            <textarea id="ledger-desc" rows="3"></textarea>
-            <button class="primary" id="ledger-submit">등록</button>
-            <p class="notice" id="ledger-notice"></p>
-          </div>
           <div class="card">
             <h3>회계 내역</h3>
             <table>
@@ -286,6 +261,7 @@
               </thead>
               <tbody id="ledger-table"></tbody>
             </table>
+            <p class="notice">수입/지출 입력은 시트에서 진행해 주세요.</p>
           </div>
         </div>
       </section>
@@ -390,88 +366,6 @@
         }
         google.script.run.withSuccessHandler(renderLedger).getLedger();
       }
-
-      document.getElementById('member-submit').addEventListener('click', () => {
-        const payload = {
-          name: document.getElementById('member-name').value,
-          phone: document.getElementById('member-phone').value,
-          joinDate: document.getElementById('member-join').value,
-          status: document.getElementById('member-status').value,
-          notes: document.getElementById('member-notes').value,
-        };
-        if (!gasAvailable) {
-          sampleMembers.push({
-            이름: payload.name,
-            전화번호: payload.phone,
-            가입일: payload.joinDate,
-            상태: payload.status,
-          });
-          renderMembers(sampleMembers);
-          document.getElementById('member-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
-          return;
-        }
-        google.script.run
-          .withSuccessHandler(() => {
-            loadMembers();
-            document.getElementById('member-notice').textContent = '회원이 등록되었습니다.';
-          })
-          .addMember(payload);
-      });
-
-      document.getElementById('payment-submit').addEventListener('click', () => {
-        const payload = {
-          memberName: document.getElementById('payment-member').value,
-          month: document.getElementById('payment-month').value,
-          amount: document.getElementById('payment-amount').value,
-          paidDate: document.getElementById('payment-date').value,
-          method: document.getElementById('payment-method').value,
-          notes: document.getElementById('payment-notes').value,
-        };
-        if (!gasAvailable) {
-          samplePayments.push({
-            회원명: payload.memberName,
-            회비월: payload.month,
-            금액: payload.amount,
-            납부일: payload.paidDate,
-          });
-          renderPayments(samplePayments);
-          document.getElementById('payment-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
-          return;
-        }
-        google.script.run
-          .withSuccessHandler(() => {
-            loadPayments();
-            document.getElementById('payment-notice').textContent = '회비 납부가 등록되었습니다.';
-          })
-          .addPayment(payload);
-      });
-
-      document.getElementById('ledger-submit').addEventListener('click', () => {
-        const payload = {
-          type: document.getElementById('ledger-type').value,
-          category: document.getElementById('ledger-category').value,
-          amount: document.getElementById('ledger-amount').value,
-          date: document.getElementById('ledger-date').value,
-          description: document.getElementById('ledger-desc').value,
-        };
-        if (!gasAvailable) {
-          sampleLedger.push({
-            구분: payload.type,
-            카테고리: payload.category,
-            금액: payload.amount,
-            날짜: payload.date,
-          });
-          renderLedger(sampleLedger);
-          document.getElementById('ledger-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
-          return;
-        }
-        google.script.run
-          .withSuccessHandler(() => {
-            loadLedger();
-            document.getElementById('ledger-notice').textContent = '회계 내역이 등록되었습니다.';
-          })
-          .addLedgerEntry(payload);
-      });
 
       loadMembers();
       loadPayments();
