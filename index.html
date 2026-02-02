@@ -29,6 +29,9 @@
         padding: 24px;
         background: var(--card);
         border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
       }
 
       header h1 {
@@ -52,6 +55,8 @@
         gap: 12px;
         margin-bottom: 16px;
         flex-wrap: wrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       .tab-button {
@@ -60,6 +65,7 @@
         padding: 10px 16px;
         border-radius: 999px;
         cursor: pointer;
+        white-space: nowrap;
       }
 
       .tab-button.active {
@@ -109,6 +115,7 @@
         padding: 10px 16px;
         border-radius: 8px;
         cursor: pointer;
+        width: 100%;
       }
 
       table {
@@ -128,6 +135,33 @@
         margin-top: 8px;
         color: #5f6b7a;
         font-size: 13px;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 16px;
+        }
+
+        main {
+          padding: 16px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .card {
+          padding: 14px;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        th,
+        td {
+          padding: 6px;
+        }
       }
     </style>
   </head>
@@ -261,15 +295,15 @@
       const gasAvailable = typeof google !== 'undefined' && google.script && google.script.run;
 
       const sampleMembers = [
-        { Name: '김지훈', Phone: '010-1234-5678', JoinDate: '2024-05-01', Status: '활동' },
-        { Name: '박소연', Phone: '010-9876-5432', JoinDate: '2024-05-03', Status: '휴면' },
+        { 이름: '김지훈', 전화번호: '010-1234-5678', 가입일: '2024-05-01', 상태: '활동' },
+        { 이름: '박소연', 전화번호: '010-9876-5432', 가입일: '2024-05-03', 상태: '휴면' },
       ];
       const samplePayments = [
-        { MemberName: '김지훈', Month: '2024-07', Amount: 30000, PaidDate: '2024-07-02' },
+        { 회원명: '김지훈', 회비월: '2024-07', 금액: 30000, 납부일: '2024-07-02' },
       ];
       const sampleLedger = [
-        { Type: '수입', Category: '회비', Amount: 30000, Date: '2024-07-02' },
-        { Type: '지출', Category: '장비', Amount: 12000, Date: '2024-07-04' },
+        { 구분: '수입', 카테고리: '회비', 금액: 30000, 날짜: '2024-07-02' },
+        { 구분: '지출', 카테고리: '장비', 금액: 12000, 날짜: '2024-07-04' },
       ];
 
       const tabButtons = document.querySelectorAll('.tab-button');
@@ -293,10 +327,10 @@
           .map(
             (member) => `
               <tr>
-                <td>${member.Name || ''}</td>
-                <td>${member.Phone || ''}</td>
-                <td>${member.JoinDate || ''}</td>
-                <td>${member.Status || ''}</td>
+                <td>${member.이름 || ''}</td>
+                <td>${member.전화번호 || ''}</td>
+                <td>${member.가입일 || ''}</td>
+                <td>${member.상태 || ''}</td>
               </tr>
             `
           )
@@ -308,10 +342,10 @@
           .map(
             (payment) => `
               <tr>
-                <td>${payment.MemberName || ''}</td>
-                <td>${payment.Month || ''}</td>
-                <td>${Number(payment.Amount || 0).toLocaleString()}</td>
-                <td>${payment.PaidDate || ''}</td>
+                <td>${payment.회원명 || ''}</td>
+                <td>${payment.회비월 || ''}</td>
+                <td>${Number(payment.금액 || 0).toLocaleString()}</td>
+                <td>${payment.납부일 || ''}</td>
               </tr>
             `
           )
@@ -323,10 +357,10 @@
           .map(
             (entry) => `
               <tr>
-                <td>${entry.Type || ''}</td>
-                <td>${entry.Category || ''}</td>
-                <td>${Number(entry.Amount || 0).toLocaleString()}</td>
-                <td>${entry.Date || ''}</td>
+                <td>${entry.구분 || ''}</td>
+                <td>${entry.카테고리 || ''}</td>
+                <td>${Number(entry.금액 || 0).toLocaleString()}</td>
+                <td>${entry.날짜 || ''}</td>
               </tr>
             `
           )
@@ -367,10 +401,10 @@
         };
         if (!gasAvailable) {
           sampleMembers.push({
-            Name: payload.name,
-            Phone: payload.phone,
-            JoinDate: payload.joinDate,
-            Status: payload.status,
+            이름: payload.name,
+            전화번호: payload.phone,
+            가입일: payload.joinDate,
+            상태: payload.status,
           });
           renderMembers(sampleMembers);
           document.getElementById('member-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
@@ -395,10 +429,10 @@
         };
         if (!gasAvailable) {
           samplePayments.push({
-            MemberName: payload.memberName,
-            Month: payload.month,
-            Amount: payload.amount,
-            PaidDate: payload.paidDate,
+            회원명: payload.memberName,
+            회비월: payload.month,
+            금액: payload.amount,
+            납부일: payload.paidDate,
           });
           renderPayments(samplePayments);
           document.getElementById('payment-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
@@ -422,10 +456,10 @@
         };
         if (!gasAvailable) {
           sampleLedger.push({
-            Type: payload.type,
-            Category: payload.category,
-            Amount: payload.amount,
-            Date: payload.date,
+            구분: payload.type,
+            카테고리: payload.category,
+            금액: payload.amount,
+            날짜: payload.date,
           });
           renderLedger(sampleLedger);
           document.getElementById('ledger-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';

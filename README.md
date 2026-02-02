@@ -12,9 +12,9 @@
 
 | 시트명 | 용도 | 기본 컬럼 |
 | --- | --- | --- |
-| 회원 | 회원 목록 | ID, Name, Phone, JoinDate, Status, Notes |
-| 회비납부 | 회비 납부 기록 | ID, MemberID, MemberName, Month, Amount, PaidDate, Method, Notes |
-| 회계 | 회계 내역 | ID, Type, Category, Amount, Date, Description |
+| 회원 | 회원 목록 | ID, 이름, 전화번호, 가입일, 상태, 메모 |
+| 회비납부 | 회비 납부 기록 | ID, 회원ID, 회원명, 회비월, 금액, 납부일, 납부방법, 메모 |
+| 회계 | 회계 내역 | ID, 구분, 카테고리, 금액, 날짜, 설명 |
 
 ## 설치 및 배포
 1. Google 스프레드시트 생성

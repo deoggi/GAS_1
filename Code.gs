@@ -1,15 +1,15 @@
 const SHEETS = {
   members: {
     name: '회원',
-    headers: ['ID', 'Name', 'Phone', 'JoinDate', 'Status', 'Notes'],
+    headers: ['ID', '이름', '전화번호', '가입일', '상태', '메모'],
   },
   payments: {
     name: '회비납부',
-    headers: ['ID', 'MemberID', 'MemberName', 'Month', 'Amount', 'PaidDate', 'Method', 'Notes'],
+    headers: ['ID', '회원ID', '회원명', '회비월', '금액', '납부일', '납부방법', '메모'],
   },
   ledger: {
     name: '회계',
-    headers: ['ID', 'Type', 'Category', 'Amount', 'Date', 'Description'],
+    headers: ['ID', '구분', '카테고리', '금액', '날짜', '설명'],
   },
 };
 
