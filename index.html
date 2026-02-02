@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>탁구장 운영 웹앱</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --primary: #0f62fe;
+        --bg: #f7f7fb;
+        --text: #1f1f1f;
+        --card: #ffffff;
+        --border: #dde1e6;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      header {
+        padding: 24px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+      }
+
+      header h1 {
+        margin: 0 0 8px 0;
+        font-size: 24px;
+      }
+
+      header p {
+        margin: 0;
+        color: #5f6b7a;
+      }
+
+      main {
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      .tab-button {
+        border: 1px solid var(--border);
+        background: var(--card);
+        padding: 10px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .tab-button.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 4px;
+        color: #526070;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-bottom: 12px;
+      }
+
+      button.primary {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .notice {
+        margin-top: 8px;
+        color: #5f6b7a;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>탁구장 운영 웹앱</h1>
+      <p>회원관리 · 회비납부관리 · 회계관리(수입/지출)</p>
+    </header>
+    <main>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="members">회원관리</button>
+        <button class="tab-button" data-tab="payments">회비납부관리</button>
+        <button class="tab-button" data-tab="ledger">회계관리</button>
+      </div>
+
+      <section id="members" class="tab-panel">
+        <div class="grid">
+          <div class="card">
+            <h3>회원 등록</h3>
+            <label for="member-name">이름</label>
+            <input id="member-name" type="text" />
+            <label for="member-phone">전화번호</label>
+            <input id="member-phone" type="text" />
+            <label for="member-join">가입일</label>
+            <input id="member-join" type="date" />
+            <label for="member-status">상태</label>
+            <select id="member-status">
+              <option value="활동">활동</option>
+              <option value="휴면">휴면</option>
+            </select>
+            <label for="member-notes">메모</label>
+            <textarea id="member-notes" rows="3"></textarea>
+            <button class="primary" id="member-submit">등록</button>
+            <p class="notice" id="member-notice"></p>
+          </div>
+          <div class="card">
+            <h3>회원 목록</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>전화번호</th>
+                  <th>가입일</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody id="member-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="payments" class="tab-panel" hidden>
+        <div class="grid">
+          <div class="card">
+            <h3>회비 납부 등록</h3>
+            <label for="payment-member">회원명</label>
+            <input id="payment-member" type="text" />
+            <label for="payment-month">회비 월</label>
+            <input id="payment-month" type="month" />
+            <label for="payment-amount">금액</label>
+            <input id="payment-amount" type="number" />
+            <label for="payment-date">납부일</label>
+            <input id="payment-date" type="date" />
+            <label for="payment-method">납부방법</label>
+            <select id="payment-method">
+              <option value="현금">현금</option>
+              <option value="계좌이체">계좌이체</option>
+            </select>
+            <label for="payment-notes">메모</label>
+            <textarea id="payment-notes" rows="3"></textarea>
+            <button class="primary" id="payment-submit">등록</button>
+            <p class="notice" id="payment-notice"></p>
+          </div>
+          <div class="card">
+            <h3>회비 납부 내역</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>회원명</th>
+                  <th>월</th>
+                  <th>금액</th>
+                  <th>납부일</th>
+                </tr>
+              </thead>
+              <tbody id="payment-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="ledger" class="tab-panel" hidden>
+        <div class="grid">
+          <div class="card">
+            <h3>회계 입력</h3>
+            <label for="ledger-type">구분</label>
+            <select id="ledger-type">
+              <option value="수입">수입</option>
+              <option value="지출">지출</option>
+            </select>
+            <label for="ledger-category">카테고리</label>
+            <input id="ledger-category" type="text" />
+            <label for="ledger-amount">금액</label>
+            <input id="ledger-amount" type="number" />
+            <label for="ledger-date">날짜</label>
+            <input id="ledger-date" type="date" />
+            <label for="ledger-desc">설명</label>
+            <textarea id="ledger-desc" rows="3"></textarea>
+            <button class="primary" id="ledger-submit">등록</button>
+            <p class="notice" id="ledger-notice"></p>
+          </div>
+          <div class="card">
+            <h3>회계 내역</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>구분</th>
+                  <th>카테고리</th>
+                  <th>금액</th>
+                  <th>날짜</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const gasAvailable = typeof google !== 'undefined' && google.script && google.script.run;
+
+      const sampleMembers = [
+        { Name: '김지훈', Phone: '010-1234-5678', JoinDate: '2024-05-01', Status: '활동' },
+        { Name: '박소연', Phone: '010-9876-5432', JoinDate: '2024-05-03', Status: '휴면' },
+      ];
+      const samplePayments = [
+        { MemberName: '김지훈', Month: '2024-07', Amount: 30000, PaidDate: '2024-07-02' },
+      ];
+      const sampleLedger = [
+        { Type: '수입', Category: '회비', Amount: 30000, Date: '2024-07-02' },
+        { Type: '지출', Category: '장비', Amount: 12000, Date: '2024-07-04' },
+      ];
+
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          tabButtons.forEach((btn) => btn.classList.remove('active'));
+          tabPanels.forEach((panel) => (panel.hidden = true));
+          button.classList.add('active');
+          document.getElementById(button.dataset.tab).hidden = false;
+        });
+      });
+
+      const memberTable = document.getElementById('member-table');
+      const paymentTable = document.getElementById('payment-table');
+      const ledgerTable = document.getElementById('ledger-table');
+
+      function renderMembers(members) {
+        memberTable.innerHTML = members
+          .map(
+            (member) => `
+              <tr>
+                <td>${member.Name || ''}</td>
+                <td>${member.Phone || ''}</td>
+                <td>${member.JoinDate || ''}</td>
+                <td>${member.Status || ''}</td>
+              </tr>
+            `
+          )
+          .join('');
+      }
+
+      function renderPayments(payments) {
+        paymentTable.innerHTML = payments
+          .map(
+            (payment) => `
+              <tr>
+                <td>${payment.MemberName || ''}</td>
+                <td>${payment.Month || ''}</td>
+                <td>${Number(payment.Amount || 0).toLocaleString()}</td>
+                <td>${payment.PaidDate || ''}</td>
+              </tr>
+            `
+          )
+          .join('');
+      }
+
+      function renderLedger(entries) {
+        ledgerTable.innerHTML = entries
+          .map(
+            (entry) => `
+              <tr>
+                <td>${entry.Type || ''}</td>
+                <td>${entry.Category || ''}</td>
+                <td>${Number(entry.Amount || 0).toLocaleString()}</td>
+                <td>${entry.Date || ''}</td>
+              </tr>
+            `
+          )
+          .join('');
+      }
+
+      function loadMembers() {
+        if (!gasAvailable) {
+          renderMembers(sampleMembers);
+          return;
+        }
+        google.script.run.withSuccessHandler(renderMembers).getMembers();
+      }
+
+      function loadPayments() {
+        if (!gasAvailable) {
+          renderPayments(samplePayments);
+          return;
+        }
+        google.script.run.withSuccessHandler(renderPayments).getPayments();
+      }
+
+      function loadLedger() {
+        if (!gasAvailable) {
+          renderLedger(sampleLedger);
+          return;
+        }
+        google.script.run.withSuccessHandler(renderLedger).getLedger();
+      }
+
+      document.getElementById('member-submit').addEventListener('click', () => {
+        const payload = {
+          name: document.getElementById('member-name').value,
+          phone: document.getElementById('member-phone').value,
+          joinDate: document.getElementById('member-join').value,
+          status: document.getElementById('member-status').value,
+          notes: document.getElementById('member-notes').value,
+        };
+        if (!gasAvailable) {
+          sampleMembers.push({
+            Name: payload.name,
+            Phone: payload.phone,
+            JoinDate: payload.joinDate,
+            Status: payload.status,
+          });
+          renderMembers(sampleMembers);
+          document.getElementById('member-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
+          return;
+        }
+        google.script.run
+          .withSuccessHandler(() => {
+            loadMembers();
+            document.getElementById('member-notice').textContent = '회원이 등록되었습니다.';
+          })
+          .addMember(payload);
+      });
+
+      document.getElementById('payment-submit').addEventListener('click', () => {
+        const payload = {
+          memberName: document.getElementById('payment-member').value,
+          month: document.getElementById('payment-month').value,
+          amount: document.getElementById('payment-amount').value,
+          paidDate: document.getElementById('payment-date').value,
+          method: document.getElementById('payment-method').value,
+          notes: document.getElementById('payment-notes').value,
+        };
+        if (!gasAvailable) {
+          samplePayments.push({
+            MemberName: payload.memberName,
+            Month: payload.month,
+            Amount: payload.amount,
+            PaidDate: payload.paidDate,
+          });
+          renderPayments(samplePayments);
+          document.getElementById('payment-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
+          return;
+        }
+        google.script.run
+          .withSuccessHandler(() => {
+            loadPayments();
+            document.getElementById('payment-notice').textContent = '회비 납부가 등록되었습니다.';
+          })
+          .addPayment(payload);
+      });
+
+      document.getElementById('ledger-submit').addEventListener('click', () => {
+        const payload = {
+          type: document.getElementById('ledger-type').value,
+          category: document.getElementById('ledger-category').value,
+          amount: document.getElementById('ledger-amount').value,
+          date: document.getElementById('ledger-date').value,
+          description: document.getElementById('ledger-desc').value,
+        };
+        if (!gasAvailable) {
+          sampleLedger.push({
+            Type: payload.type,
+            Category: payload.category,
+            Amount: payload.amount,
+            Date: payload.date,
+          });
+          renderLedger(sampleLedger);
+          document.getElementById('ledger-notice').textContent = '로컬 미리보기입니다. 데이터가 저장되지 않습니다.';
+          return;
+        }
+        google.script.run
+          .withSuccessHandler(() => {
+            loadLedger();
+            document.getElementById('ledger-notice').textContent = '회계 내역이 등록되었습니다.';
+          })
+          .addLedgerEntry(payload);
+      });
+
+      loadMembers();
+      loadPayments();
+      loadLedger();
+    </script>
+  </body>
+</html>
